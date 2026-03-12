@@ -106,6 +106,42 @@ def load_html():
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
+# MIME 타입 매핑
+MIME_TYPES = {
+    ".html": "text/html; charset=utf-8",
+    ".css":  "text/css; charset=utf-8",
+    ".js":   "application/javascript; charset=utf-8",
+    ".png":  "image/png",
+    ".jpg":  "image/jpeg",
+    ".ico":  "image/x-icon",
+    ".svg":  "image/svg+xml",
+    ".woff2":"font/woff2",
+}
+
+def serve_static(handler, rel_path):
+    """static/ 폴더 아래 파일을 서빙한다."""
+    base = os.path.join(os.path.dirname(__file__), "static")
+    # 경로 탈출 방지
+    full = os.path.normpath(os.path.join(base, rel_path.lstrip("/")))
+    if not full.startswith(base):
+        handler.send_response(403)
+        handler.end_headers()
+        return
+    if not os.path.isfile(full):
+        handler.send_response(404)
+        handler.end_headers()
+        return
+    ext = os.path.splitext(full)[1].lower()
+    mime = MIME_TYPES.get(ext, "application/octet-stream")
+    with open(full, "rb") as f:
+        body = f.read()
+    handler.send_response(200)
+    handler.send_header("Content-Type", mime)
+    handler.send_header("Content-Length", str(len(body)))
+    handler.send_header("Cache-Control", "public, max-age=3600")
+    handler.end_headers()
+    handler.wfile.write(body)
+
 # ─── HTTP HANDLER ─────────────────────────────────────────────────────────────
 
 class Handler(BaseHTTPRequestHandler):
@@ -152,6 +188,11 @@ class Handler(BaseHTTPRequestHandler):
 
         if path == "/" or path == "/index.html":
             self.send_html(200, load_html())
+
+        # ── 정적 파일 (css, js, 이미지 등) ──────────────────────────────────
+        elif path.startswith("/css/") or path.startswith("/js/") \
+                or path.startswith("/static/"):
+            serve_static(self, path)
 
         elif path == "/api/me":
             token = self.get_token()
