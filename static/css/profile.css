@@ -1,0 +1,116 @@
+/* =====================================================
+   profile.css  —  프로필 사이드 패널 스타일
+   ✏️  프로필/설정 패널 디자인 수정 시 여기
+   ===================================================== */
+
+/* ── 오버레이 + 시트 래퍼 ── */
+.side-panel {
+  position: fixed; inset: 0;
+  z-index: 200;
+  display: none;
+}
+.side-panel.open { display: flex; }
+
+.panel-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* ── 패널 시트 ── */
+.panel-sheet {
+  position: absolute; right: 0; top: 0; bottom: 0;
+  width: 320px;
+  background: var(--bg2);
+  border-left: 1px solid var(--border);
+  padding: 28px 24px;
+  display: flex; flex-direction: column; gap: 20px;
+  animation: panelSlideIn 0.25s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes panelSlideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+/* ── 패널 헤더 ── */
+.panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-title { font-size: 18px; font-weight: 700; }
+.panel-close {
+  width: 32px; height: 32px;
+  background: var(--bg3); border: none; border-radius: 8px;
+  color: var(--text2); cursor: pointer; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+.panel-close:hover { background: var(--surface); color: var(--text); }
+
+/* ── 프로필 아바타 & 이름 ── */
+.profile-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+  margin: 0 auto;
+  box-shadow: 0 0 0 4px rgba(124,106,247,0.2);
+}
+.profile-name {
+  text-align: center;
+  font-size: 18px; font-weight: 700;
+  margin-top: 8px;
+}
+.profile-sub { text-align: center; color: var(--text2); font-size: 13px; }
+
+/* ── 입력 필드 ── */
+.field-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text2);
+  margin-bottom: 6px; display: block;
+}
+.field-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font); font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field-input:focus { border-color: var(--accent); }
+
+/* ── 버튼들 ── */
+.btn-save {
+  padding: 10px 18px;
+  background: linear-gradient(135deg, var(--accent), #6d5ce7);
+  border: none; border-radius: 10px;
+  color: #fff;
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  width: 100%;
+}
+.btn-save:hover { opacity: 0.9; }
+
+.btn-logout {
+  padding: 10px 18px;
+  background: rgba(248,113,113,0.1);
+  border: 1px solid rgba(248,113,113,0.25);
+  border-radius: 10px;
+  color: var(--danger);
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: 100%;
+}
+.btn-logout:hover { background: rgba(248,113,113,0.2); }
+
+/* ── 저장 완료 메시지 ── */
+.panel-msg {
+  font-size: 12px; color: var(--success);
+  text-align: center;
+  display: none;
+}
