@@ -35,7 +35,7 @@ def _load_api_keys():
     # 로컬 테스트용 하드코딩 폴백 (배포 시엔 환경변수 사용 권장)
     if not keys:
         hardcoded = [
-            # "sk-your-key-here",  # 로컬 테스트 시 여기에 직접 입력
+           "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"
         ]
         keys = [k for k in hardcoded if k.startswith("sk-")]
     return keys
