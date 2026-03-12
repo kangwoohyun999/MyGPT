@@ -1,114 +1,125 @@
-/* =====================================================
-   login.css  —  로그인 페이지
-   ===================================================== */
-#login-page {
-  position: fixed; inset: 0;
+/* ==============================================
+   login.css — 로그인 페이지
+   ✏️ 수정: 이 파일만 건드리면 됩니다
+   ============================================== */
+
+/* 전체를 덮는 페이지 레이어 */
+#page-login {
+  position: fixed; inset: 0; z-index: 100;
   display: flex; align-items: center; justify-content: center;
   background: var(--bg);
-  z-index: 1000;
-  padding: 16px;
+  padding: 20px;
+  transition: opacity 0.3s, transform 0.3s;
+}
+#page-login.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.97);
 }
 
-.login-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-.login-bg::before {
+/* 배경 빛 */
+.login-glow {
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+}
+.login-glow::before {
   content: '';
   position: absolute;
-  width: 500px; height: 500px;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -60%);
-  background: radial-gradient(circle, rgba(124,106,247,0.12) 0%, transparent 70%);
+  width: 480px; height: 480px;
+  top: 40%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(124,106,247,0.14) 0%, transparent 65%);
   border-radius: 50%;
-  animation: loginPulse 4s ease-in-out infinite;
+  animation: glowPulse 5s ease-in-out infinite;
 }
-.login-bg::after {
-  content: '';
-  position: absolute;
-  width: 250px; height: 250px;
-  bottom: 8%; right: 8%;
-  background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%);
-  border-radius: 50%;
-  animation: loginPulse 6s ease-in-out infinite reverse;
-}
-@keyframes loginPulse {
-  0%, 100% { transform: translate(-50%, -60%) scale(1); }
-  50%       { transform: translate(-50%, -60%) scale(1.08); }
+@keyframes glowPulse {
+  0%,100% { transform: translate(-50%,-50%) scale(1); }
+  50%      { transform: translate(-50%,-50%) scale(1.12); }
 }
 
-.login-box {
+/* 카드 */
+.login-card {
   position: relative; z-index: 1;
-  width: 100%; max-width: 380px;
-  padding: 40px 36px;
+  width: 100%; max-width: 390px;
   background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: 24px;
-  animation: fadeUp 0.45s cubic-bezier(0.16,1,0.3,1);
+  padding: 44px 36px 36px;
+  animation: cardIn 0.5s cubic-bezier(0.16,1,0.3,1);
 }
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(28px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* 로고 */
 .login-logo {
   display: flex; align-items: center; gap: 12px;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
 }
-.login-logo-icon {
-  width: 42px; height: 42px;
+.login-logo-mark {
+  width: 44px; height: 44px;
   background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border-radius: 12px;
+  border-radius: 13px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
+  font-size: 22px;
+  box-shadow: 0 4px 16px rgba(124,106,247,0.35);
 }
 .login-logo h1 {
-  font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #fff 40%, var(--accent3));
+  font-size: 24px; font-weight: 700; letter-spacing: -0.5px;
+  background: linear-gradient(120deg, #fff 40%, var(--accent3));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 
-.login-label {
+/* 폼 */
+.login-field { margin-bottom: 16px; }
+.login-field label {
   display: block;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
-  color: var(--text2); text-transform: uppercase;
-  margin-bottom: 7px; margin-top: 18px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--text2);
+  margin-bottom: 7px;
 }
-.login-input {
+.login-field input {
   width: 100%;
-  padding: 11px 14px;
+  padding: 12px 15px;
   background: var(--bg3);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 11px;
   color: var(--text); font-family: var(--font); font-size: 14px;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.login-input:focus {
+.login-field input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(124,106,247,0.15);
+  box-shadow: 0 0 0 3px rgba(124,106,247,0.16);
 }
-.login-input::placeholder { color: var(--text2); opacity: 0.55; }
+.login-field input::placeholder { color: var(--text2); opacity: 0.5; }
 
 .login-hint {
-  font-size: 11px; color: var(--text2);
-  margin-top: 6px; line-height: 1.5; opacity: 0.8;
+  font-size: 12px; color: var(--text2); opacity: 0.75;
+  margin-bottom: 6px; line-height: 1.5;
 }
 
-.btn-login {
-  width: 100%; margin-top: 24px;
-  padding: 13px;
-  background: linear-gradient(135deg, var(--accent), #6d5ce7);
-  border: none; border-radius: 12px;
-  color: #fff; font-family: var(--font); font-size: 15px; font-weight: 600;
-  cursor: pointer; letter-spacing: 0.02em;
-  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
-}
-.btn-login:hover    { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(124,106,247,0.35); }
-.btn-login:active   { transform: translateY(0); }
-.btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
+/* 에러 */
 .login-error {
-  margin-top: 12px; padding: 9px 13px;
   background: rgba(248,113,113,0.1);
-  border: 1px solid rgba(248,113,113,0.25);
-  border-radius: 8px; color: var(--danger); font-size: 13px;
+  border: 1px solid rgba(248,113,113,0.3);
+  border-radius: 9px;
+  padding: 9px 13px;
+  color: var(--danger); font-size: 13px;
+  margin-bottom: 14px;
   display: none;
 }
+
+/* 버튼 */
+.btn-login {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--accent), #6050e0);
+  border: none; border-radius: 13px;
+  color: #fff; font-family: var(--font); font-size: 15px; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.03em;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  box-shadow: 0 4px 20px rgba(124,106,247,0.3);
+}
+.btn-login:hover    { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(124,106,247,0.4); }
+.btn-login:active   { transform: translateY(0); box-shadow: none; }
+.btn-login:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
