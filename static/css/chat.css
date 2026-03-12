@@ -1,28 +1,32 @@
 /* =====================================================
-   chat.css  —  홈 화면 & 채팅 화면 스타일
-   ✏️  메시지 버블·홈 화면·입력창 수정 시 여기
+   chat.css  —  홈 화면 & 채팅 화면 & 입력창
    ===================================================== */
 
-/* ══════════════════════════════
-   홈 화면
-══════════════════════════════ */
+/* ══════════════ 홈 화면 ══════════════ */
 .home-screen {
   flex: 1;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  overflow-y: auto;
+  min-height: 0;
 }
 
-.home-hero { text-align: center; margin-bottom: 48px; }
-
+.home-hero {
+  text-align: center;
+  margin-bottom: 36px;
+  width: 100%;
+}
 .home-icon {
-  width: 72px; height: 72px;
+  width: 68px; height: 68px;
   background: linear-gradient(135deg, rgba(124,106,247,0.15), rgba(167,139,250,0.1));
   border: 1px solid rgba(124,106,247,0.25);
   border-radius: 20px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 36px;
-  margin: 0 auto 24px;
+  font-size: 34px;
+  margin: 0 auto 20px;
   animation: homeFloat 3s ease-in-out infinite;
 }
 @keyframes homeFloat {
@@ -30,27 +34,25 @@
   50%       { transform: translateY(-6px); }
 }
 .home-title {
-  font-size: 32px; font-weight: 700; letter-spacing: -1px;
+  font-size: 28px; font-weight: 700; letter-spacing: -0.8px;
   background: linear-gradient(135deg, #fff 30%, var(--accent3));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 12px;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
 }
 .home-sub {
-  font-size: 15px; color: var(--text2);
-  max-width: 420px; line-height: 1.65;
+  font-size: 14px; color: var(--text2);
+  max-width: 380px; line-height: 1.65;
+  margin: 0 auto;
 }
 
-/* 추천 프롬프트 카드 */
 .suggestion-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  max-width: 520px; width: 100%;
-  margin-bottom: 36px;
+  gap: 8px;
+  width: 100%; max-width: 500px;
 }
 .suggestion-card {
-  padding: 14px 16px;
+  padding: 12px 14px;
   background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -63,67 +65,68 @@
   border-color: rgba(124,106,247,0.4);
   transform: translateY(-2px);
 }
-.suggestion-card .s-icon { font-size: 18px; margin-bottom: 6px; }
+.suggestion-card .s-icon { font-size: 17px; margin-bottom: 5px; }
 .suggestion-card .s-text { font-size: 12px; color: var(--text); line-height: 1.4; font-weight: 500; }
 
-/* ══════════════════════════════
-   채팅 화면
-══════════════════════════════ */
+/* ══════════════ 채팅 화면 ══════════════ */
 .chat-screen {
   display: none;
-  flex: 1;
   flex-direction: column;
+  flex: 1;
   min-height: 0;
+  overflow: hidden;
 }
 .chat-screen.visible { display: flex; }
 
 /* 채팅 헤더 */
 .chat-header {
-  padding: 14px 20px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
   flex-shrink: 0;
-  display: flex; align-items: center; gap: 12px;
+  background: var(--bg2);
 }
 .chat-header-title {
-  flex: 1;
+  flex: 1; min-width: 0;
   font-size: 14px; font-weight: 600; color: var(--text);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-
-/* 모델 배지 */
 .model-badge {
-  display: flex; align-items: center; gap: 6px;
-  padding: 4px 10px;
+  display: flex; align-items: center; gap: 5px;
+  padding: 3px 9px;
   background: rgba(124,106,247,0.1);
   border: 1px solid rgba(124,106,247,0.2);
   border-radius: 20px;
   font-size: 11px; font-weight: 600;
   color: var(--accent2); letter-spacing: 0.04em;
+  flex-shrink: 0;
 }
 .model-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
+  width: 5px; height: 5px; border-radius: 50%;
   background: var(--accent2);
   animation: modelBlink 2s ease-in-out infinite;
 }
 @keyframes modelBlink {
   0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
+  50%       { opacity: 0.35; }
 }
 
-/* ── 메시지 영역 ── */
+/* 메시지 영역 */
 .messages-area {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 0;
-  display: flex; flex-direction: column; gap: 0;
+  padding: 16px 0 8px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 /* 메시지 행 */
 .msg-row {
   display: flex;
-  padding: 6px 20px;
-  animation: msgIn 0.25s cubic-bezier(0.16,1,0.3,1);
+  align-items: flex-end;
+  padding: 4px 16px;
+  animation: msgIn 0.22s cubic-bezier(0.16,1,0.3,1);
 }
 @keyframes msgIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -134,29 +137,30 @@
 
 /* 아바타 */
 .msg-avatar {
-  width: 30px; height: 30px;
+  width: 28px; height: 28px;
   border-radius: 50%;
   flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-  margin-top: 2px;
+  font-size: 13px;
+  margin-bottom: 2px;
 }
 .msg-row.assistant .msg-avatar {
   background: linear-gradient(135deg, var(--accent), var(--accent2));
-  margin-right: 10px;
+  margin-right: 8px;
 }
 .msg-row.user .msg-avatar {
   background: var(--bg3);
   border: 1px solid var(--border);
-  margin-left: 10px;
+  margin-left: 8px;
 }
 
 /* 말풍선 */
 .msg-bubble {
-  max-width: 72%;
-  padding: 12px 16px;
+  max-width: 68%;
+  padding: 10px 14px;
   border-radius: 16px;
   font-size: 14px; line-height: 1.65;
+  word-break: break-word;
 }
 .msg-row.user .msg-bubble {
   background: linear-gradient(135deg, var(--accent), #6d5ce7);
@@ -173,24 +177,20 @@
 /* 메시지 시간 */
 .msg-time {
   font-size: 10px; color: var(--text2);
-  margin-top: 4px;
-  padding: 0 4px;
-  text-align: right;
+  margin-top: 3px; padding: 0 4px;
 }
+.msg-row.user .msg-time      { text-align: right; }
 .msg-row.assistant .msg-time { text-align: left; }
 
-/* ── 타이핑 인디케이터 ── */
-.typing-row { display: flex; padding: 6px 20px; }
+/* 타이핑 인디케이터 */
+.typing-row { display: flex; align-items: flex-end; padding: 4px 16px; }
 .typing-bubble {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 14px 18px;
-  border-radius: 16px 16px 16px 4px;
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 12px 16px; border-radius: 16px 16px 16px 4px;
   display: flex; gap: 5px; align-items: center;
 }
 .typing-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
+  width: 7px; height: 7px; border-radius: 50%;
   background: var(--accent2);
   animation: typingBounce 1.2s ease-in-out infinite;
 }
@@ -201,7 +201,7 @@
   30%           { transform: translateY(-5px); opacity: 1; }
 }
 
-/* ── 마크다운 렌더링 ── */
+/* 마크다운 */
 .msg-bubble pre {
   background: rgba(0,0,0,0.3);
   padding: 10px 12px; border-radius: 8px;
@@ -223,21 +223,19 @@
 .msg-bubble strong { font-weight: 700; }
 .msg-bubble em     { font-style: italic; }
 
-/* ══════════════════════════════
-   입력 바
-══════════════════════════════ */
+/* ══════════════ 입력 바 ══════════════ */
 .input-bar {
-  padding: 16px 20px 20px;
-  flex-shrink: 0;
+  padding: 12px 16px 14px;
   border-top: 1px solid var(--border);
   background: var(--bg);
+  flex-shrink: 0;
 }
 .input-wrap {
   display: flex; align-items: flex-end; gap: 10px;
   background: var(--bg2);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 12px 14px;
+  border-radius: 14px;
+  padding: 10px 12px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .input-wrap:focus-within {
@@ -245,25 +243,23 @@
   box-shadow: 0 0 0 3px rgba(124,106,247,0.1);
 }
 #chat-input {
-  flex: 1;
+  flex: 1; min-width: 0;
   background: transparent; border: none; outline: none;
-  color: var(--text);
-  font-family: var(--font); font-size: 14px;
+  color: var(--text); font-family: var(--font); font-size: 14px;
   resize: none; line-height: 1.5;
-  max-height: 180px;
+  max-height: 160px;
   scrollbar-width: none;
 }
 #chat-input::placeholder { color: var(--text2); opacity: 0.55; }
 #chat-input::-webkit-scrollbar { display: none; }
 
 .send-btn {
-  width: 36px; height: 36px;
+  width: 34px; height: 34px;
   border-radius: 10px;
   background: linear-gradient(135deg, var(--accent), #6d5ce7);
   border: none; color: #fff;
-  cursor: pointer;
+  cursor: pointer; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; flex-shrink: 0;
   transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
 }
 .send-btn:hover    { transform: scale(1.08); box-shadow: 0 4px 12px rgba(124,106,247,0.4); }
@@ -272,6 +268,5 @@
 
 .input-hint {
   font-size: 11px; color: var(--text2);
-  text-align: center; margin-top: 8px;
-  opacity: 0.7;
+  text-align: center; margin-top: 6px; opacity: 0.6;
 }

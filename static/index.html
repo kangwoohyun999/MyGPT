@@ -4,20 +4,9 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MyGPT</title>
-
-<!-- 구글 폰트 -->
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
-
-<!--
-  CSS 파일 구조
-  css/base.css     — 변수·리셋·공통
-  css/login.css    — 로그인 페이지
-  css/layout.css   — 상단바·사이드바·하단 nav
-  css/chat.css     — 홈·채팅·입력창
-  css/profile.css  — 프로필 패널
--->
 <link rel="stylesheet" href="css/base.css"/>
 <link rel="stylesheet" href="css/login.css"/>
 <link rel="stylesheet" href="css/layout.css"/>
@@ -26,7 +15,10 @@
 </head>
 <body>
 
-<!-- 로그인 페이지  ✏️ 디자인: css/login.css  |  동작: js/auth.js -->
+<!-- ══════════════════════════════════════
+     로그인 페이지
+     디자인: css/login.css | 동작: js/auth.js
+════════════════════════════════════════ -->
 <div id="login-page">
   <div class="login-bg"></div>
   <div class="login-box">
@@ -46,10 +38,13 @@
   </div>
 </div>
 
-<!-- 메인 앱 -->
+
+<!-- ══════════════════════════════════════
+     메인 앱
+════════════════════════════════════════ -->
 <div id="app">
 
-  <!-- 상단 바  ✏️ css/layout.css -->
+  <!-- 상단 바 · css/layout.css -->
   <div class="topbar">
     <div class="topbar-left">
       <div class="topbar-logo">
@@ -62,20 +57,20 @@
     </div>
     <div class="topbar-right">
       <button class="icon-btn" id="sidebar-toggle-btn"
-              onclick="toggleSidebar()" title="사이드바">☰</button>
+              onclick="toggleSidebar()" title="사이드바 열기/닫기">☰</button>
       <button class="icon-btn" onclick="openProfile()" title="프로필">👤</button>
     </div>
   </div>
 
-  <!-- 바디 -->
+  <!-- 바디 (사이드바 + 메인) -->
   <div class="app-body">
 
-    <!-- 사이드바  ✏️ css/layout.css | js/conversations.js -->
+    <!-- 사이드바 · css/layout.css | js/conversations.js -->
     <div class="sidebar" id="sidebar">
       <div class="sidebar-top">
         <button class="btn-new-chat" onclick="newChat()">＋ 새 채팅</button>
         <div class="search-box">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
           <input class="search-input" id="search-input"
@@ -91,12 +86,15 @@
     <!-- 메인 콘텐츠 -->
     <div class="main-content" id="main-content">
 
-      <!-- 홈 화면  ✏️ css/chat.css | js/chat.js -->
+      <!-- 홈 화면 · css/chat.css | js/chat.js -->
       <div class="home-screen" id="home-screen">
         <div class="home-hero">
           <div class="home-icon">🤖</div>
           <div class="home-title">무엇을 도와드릴까요?</div>
-          <div class="home-sub">GPT 기반 AI 어시스턴트입니다.<br/>아래 예시를 클릭하거나 직접 메시지를 입력해보세요.</div>
+          <div class="home-sub">
+            GPT 기반 AI 어시스턴트입니다.<br/>
+            아래 예시를 클릭하거나 직접 메시지를 입력해보세요.
+          </div>
         </div>
         <!-- ✏️ 추천 카드 추가·수정 -->
         <div class="suggestion-grid">
@@ -119,23 +117,26 @@
         </div>
       </div>
 
-      <!-- 채팅 화면  ✏️ css/chat.css | js/chat.js -->
+      <!-- 채팅 화면 · css/chat.css | js/chat.js -->
       <div class="chat-screen" id="chat-screen">
         <div class="chat-header">
           <div class="chat-header-title" id="chat-title">새 채팅</div>
-          <div class="model-badge"><div class="model-dot"></div>GPT-4o mini</div>
+          <div class="model-badge">
+            <div class="model-dot"></div>GPT-4o mini
+          </div>
         </div>
         <div class="messages-area" id="messages-area"></div>
       </div>
 
-      <!-- 입력 바  ✏️ css/chat.css | js/chat.js -->
+      <!-- 입력 바 (홈/채팅 공통) · css/chat.css | js/chat.js -->
       <div class="input-bar">
         <div class="input-wrap">
           <textarea id="chat-input" rows="1"
             placeholder="메시지를 입력하세요... (Enter 전송 / Shift+Enter 줄바꿈)"
-            onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-          <button class="send-btn" id="send-btn" onclick="sendMessage()">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            onkeydown="handleKey(event)"
+            oninput="autoResize(this)"></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()" title="전송">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/>
             </svg>
           </button>
@@ -146,25 +147,30 @@
     </div><!-- /main-content -->
   </div><!-- /app-body -->
 
-  <!-- 하단 네비게이션  ✏️ css/layout.css | js/ui.js -->
+  <!-- 하단 네비게이션 · css/layout.css | js/ui.js -->
   <div class="bottom-nav">
     <button class="nav-item active" id="nav-home" onclick="goHome()">
-      <span class="nav-icon">🏠</span><span class="nav-label">홈</span>
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">홈</span>
     </button>
     <button class="nav-item" id="nav-chat" onclick="showChatNav()">
-      <span class="nav-icon">💬</span><span class="nav-label">채팅</span>
+      <span class="nav-icon">💬</span>
+      <span class="nav-label">채팅</span>
     </button>
     <button class="nav-item" id="nav-new" onclick="newChat()">
-      <span class="nav-icon">＋</span><span class="nav-label">새 채팅</span>
+      <span class="nav-icon">＋</span>
+      <span class="nav-label">새 채팅</span>
     </button>
     <button class="nav-item" id="nav-profile" onclick="openProfile()">
-      <span class="nav-icon">👤</span><span class="nav-label">프로필</span>
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">프로필</span>
     </button>
   </div>
 
 </div><!-- /app -->
 
-<!-- 프로필 패널  ✏️ css/profile.css | js/ui.js -->
+
+<!-- 프로필 패널 · css/profile.css | js/ui.js -->
 <div class="side-panel" id="profile-panel">
   <div class="panel-overlay" onclick="closeProfile()"></div>
   <div class="panel-sheet">
@@ -177,26 +183,21 @@
     <div class="profile-sub">로컬 계정</div>
     <div>
       <span class="field-label">새 비밀번호</span>
-      <input class="field-input" id="new-password" type="password" placeholder="변경할 비밀번호 (4자 이상)"/>
+      <input class="field-input" id="new-password" type="password"
+             placeholder="변경할 비밀번호 (4자 이상)"/>
     </div>
     <button class="btn-save" onclick="saveProfile()">저장하기</button>
     <div class="panel-msg" id="panel-msg">✓ 저장되었습니다!</div>
-    <div style="flex:1"></div>
+    <div class="panel-spacer"></div>
     <button class="btn-logout" onclick="doLogout()">로그아웃</button>
   </div>
 </div>
 
-<!-- 토스트 알림  ✏️ css/base.css -->
+<!-- 토스트 알림 · css/base.css -->
 <div class="toast" id="toast"></div>
 
-<!--
-  JS 로드 순서 (순서 바꾸면 안 됨!)
-  js/state.js         — 전역 상태·유틸리티
-  js/auth.js          — 로그인·로그아웃
-  js/conversations.js — 대화 목록·삭제
-  js/chat.js          — 메시지 전송·렌더링
-  js/ui.js            — 화면 전환·패널·Nav
--->
+
+<!-- JS 로드 순서 중요: state → auth → conversations → chat → ui -->
 <script src="js/state.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/conversations.js"></script>
