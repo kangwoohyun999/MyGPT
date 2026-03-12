@@ -1,0 +1,66 @@
+/* ==============================================
+   home.css — 홈 탭 화면
+   ✏️ 홈 화면 수정: 이 파일
+   ============================================== */
+
+/* 탭 화면 안에서 스크롤 */
+#screen-home {
+  overflow-y: auto;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px 20px;
+  gap: 0;
+}
+
+/* 히어로 */
+.home-hero { text-align: center; margin-bottom: 32px; width: 100%; }
+
+.home-bot-icon {
+  width: 72px; height: 72px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg,
+    rgba(124,106,247,0.18), rgba(167,139,250,0.1));
+  border: 1px solid rgba(124,106,247,0.28);
+  border-radius: 22px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  animation: botFloat 3.2s ease-in-out infinite;
+}
+@keyframes botFloat {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+.home-title {
+  font-size: 26px; font-weight: 700; letter-spacing: -0.7px;
+  background: linear-gradient(120deg, #fff 35%, var(--accent3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+.home-sub {
+  font-size: 14px; color: var(--text2); line-height: 1.65;
+  max-width: 360px; margin: 0 auto;
+}
+
+/* 추천 카드 그리드 */
+.suggestion-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%; max-width: 520px;
+}
+.suggestion-card {
+  padding: 14px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+.suggestion-card:hover {
+  background: var(--surface);
+  border-color: rgba(124,106,247,0.4);
+  transform: translateY(-2px);
+}
+.s-icon { font-size: 18px; margin-bottom: 6px; }
+.s-text { font-size: 12px; color: var(--text); line-height: 1.45; font-weight: 500; }

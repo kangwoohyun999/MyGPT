@@ -1,47 +1,37 @@
-/* =====================================================
-   chat.js  —  메시지 전송 & 버블 렌더링
-   ✏️  채팅 동작·말풍선 디자인 수정 시 여기
-   ===================================================== */
+/* ==============================================
+   chat.js — 메시지 전송 & 렌더링
+   ============================================== */
 
-// ── 메시지 전송 ──────────────────────────────────────────
 async function sendMessage() {
   const input = document.getElementById('chat-input');
   const msg   = input.value.trim();
   if (!msg || IS_SENDING) return;
 
-  // 대화가 없으면 새로 생성
+  // 대화 없으면 새로 생성
   if (!CURRENT_CONV_ID) {
     const res = await api('POST', '/api/chats/new');
     if (!res.id) return;
     CURRENT_CONV_ID = res.id;
-    showChatScreen();
+    await loadConversations();
   }
 
   IS_SENDING = true;
   document.getElementById('send-btn').disabled = true;
-  input.value = '';
-  autoResize(input);
+  input.value = ''; autoResize(input);
 
-  // 사용자 메시지 즉시 표시
   appendMessage('user', msg, Date.now() / 1000);
-
-  // 타이핑 인디케이터 표시
-  const typingEl = showTypingIndicator();
+  const typingEl = showTyping();
 
   try {
     const res = await api('POST', '/api/chat', {
-      conversation_id: CURRENT_CONV_ID,
-      message: msg,
+      conversation_id: CURRENT_CONV_ID, message: msg,
     });
-
     typingEl.remove();
 
     if (res.reply) {
       appendMessage('assistant', res.reply, Date.now() / 1000);
-
-      // 첫 메시지라면 헤더 제목 업데이트
-      if (document.getElementById('chat-title').textContent === '새 채팅') {
-        document.getElementById('chat-title').textContent = msg.slice(0, 30);
+      if (document.getElementById('chat-topbar-title').textContent === '새 채팅') {
+        document.getElementById('chat-topbar-title').textContent = msg.slice(0,32);
       }
       await loadConversations();
     } else {
@@ -53,78 +43,68 @@ async function sendMessage() {
   } finally {
     IS_SENDING = false;
     document.getElementById('send-btn').disabled = false;
-    document.getElementById('messages-area').scrollTop = 99999;
+    scrollBottom();
   }
 }
 
-// ── 메시지 버블 추가 ─────────────────────────────────────
-function appendMessage(role, content, timestamp) {
+function appendMessage(role, content, ts) {
   const area = document.getElementById('messages-area');
   const row  = document.createElement('div');
   row.className = `msg-row ${role}`;
-
-  const time = formatTime(timestamp);
-  const html = role === 'assistant'
-    ? renderMarkdown(content)
-    : `<p>${escapeHtml(content)}</p>`;
+  const time = formatTime(ts);
+  const html = role === 'assistant' ? renderMarkdown(content) : `<p>${escapeHtml(content)}</p>`;
 
   if (role === 'assistant') {
     row.innerHTML = `
       <div class="msg-avatar">🤖</div>
-      <div>
+      <div class="msg-col">
         <div class="msg-bubble">${html}</div>
         <div class="msg-time">${time}</div>
       </div>`;
   } else {
     row.innerHTML = `
-      <div>
+      <div class="msg-col">
         <div class="msg-bubble">${html}</div>
         <div class="msg-time">${time}</div>
       </div>
-      <div class="msg-avatar"
-           style="background:var(--bg3);border:1px solid var(--border);font-size:14px">👤</div>`;
+      <div class="msg-avatar" style="background:var(--bg3);border:1px solid var(--border)">👤</div>`;
   }
-
   area.appendChild(row);
-  area.scrollTop = area.scrollHeight;
+  scrollBottom();
 }
 
-// ── 타이핑 인디케이터 ───────────────────────────────────
-function showTypingIndicator() {
-  const area   = document.getElementById('messages-area');
-  const typing = document.createElement('div');
-  typing.className = 'typing-row';
-  typing.id        = 'typing-indicator';
-  typing.innerHTML = `
-    <div class="msg-avatar"
-         style="background:linear-gradient(135deg,var(--accent),var(--accent2));margin-right:10px">🤖</div>
+function showTyping() {
+  const area = document.getElementById('messages-area');
+  const el   = document.createElement('div');
+  el.className = 'typing-row';
+  el.innerHTML = `
+    <div class="msg-avatar" style="background:linear-gradient(135deg,var(--accent),var(--accent2));margin-right:7px">🤖</div>
     <div class="typing-bubble">
       <div class="typing-dot"></div>
       <div class="typing-dot"></div>
       <div class="typing-dot"></div>
     </div>`;
-  area.appendChild(typing);
-  area.scrollTop = area.scrollHeight;
-  return typing;
+  area.appendChild(el);
+  scrollBottom();
+  return el;
 }
 
-// ── 제안 프롬프트 클릭 ───────────────────────────────────
+function scrollBottom() {
+  const area = document.getElementById('messages-area');
+  area.scrollTop = area.scrollHeight;
+}
+
 async function startWithPrompt(prompt) {
-  await newChat();
+  await goNewChat();
   document.getElementById('chat-input').value = prompt;
   await sendMessage();
 }
 
-// ── 입력창 키보드 이벤트 ────────────────────────────────
 function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 }
 
-// ── 입력창 자동 높이 조절 ───────────────────────────────
 function autoResize(el) {
   el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 180) + 'px';
+  el.style.height = Math.min(el.scrollHeight, 150) + 'px';
 }

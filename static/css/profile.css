@@ -1,96 +1,107 @@
-/* =====================================================
-   profile.css  —  프로필 패널
-   ===================================================== */
-.side-panel {
-  position: fixed; inset: 0;
-  z-index: 300;
-  display: none;
-}
-.side-panel.open { display: flex; }
+/* ==============================================
+   profile.css — 프로필 탭 화면
+   ✏️ 프로필 화면 수정: 이 파일
+   ============================================== */
 
-.panel-overlay {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(4px);
-}
-.panel-sheet {
-  position: absolute; right: 0; top: 0; bottom: 0;
-  width: 300px;
-  background: var(--bg2);
-  border-left: 1px solid var(--border);
-  padding: 24px 20px;
-  display: flex; flex-direction: column; gap: 16px;
-  animation: panelIn 0.24s cubic-bezier(0.16,1,0.3,1);
+#screen-profile {
   overflow-y: auto;
-}
-@keyframes panelIn {
-  from { transform: translateX(100%); }
-  to   { transform: translateX(0); }
+  padding: 24px 20px;
+  gap: 0;
+  align-items: center;
 }
 
-.panel-header {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-shrink: 0;
-}
-.panel-title { font-size: 17px; font-weight: 700; }
-.panel-close {
-  width: 30px; height: 30px;
-  background: var(--bg3); border: none; border-radius: 8px;
-  color: var(--text2); cursor: pointer; font-size: 16px;
-  display: flex; align-items: center; justify-content: center;
-  transition: background 0.12s, color 0.12s;
-}
-.panel-close:hover { background: var(--surface); color: var(--text); }
+.profile-page { width: 100%; max-width: 420px; }
 
+/* 아바타 섹션 */
+.profile-hero {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 28px 0 24px;
+  margin-bottom: 20px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
 .profile-avatar {
-  width: 68px; height: 68px; border-radius: 50%;
+  width: 76px; height: 76px; border-radius: 50%;
   background: linear-gradient(135deg, var(--accent), var(--accent2));
   display: flex; align-items: center; justify-content: center;
-  font-size: 28px; margin: 4px auto 0;
-  box-shadow: 0 0 0 4px rgba(124,106,247,0.2);
+  font-size: 34px; margin-bottom: 14px;
+  box-shadow: 0 0 0 5px rgba(124,106,247,0.18);
 }
 .profile-name {
-  text-align: center; font-size: 17px; font-weight: 700;
+  font-size: 20px; font-weight: 700; margin-bottom: 4px;
 }
-.profile-sub { text-align: center; color: var(--text2); font-size: 12px; }
+.profile-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px;
+  background: rgba(124,106,247,0.1);
+  border: 1px solid rgba(124,106,247,0.2);
+  border-radius: 20px;
+  font-size: 11px; font-weight: 600; color: var(--accent2);
+}
 
-.field-label {
-  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--text2);
-  margin-bottom: 6px; display: block;
+/* 설정 카드 */
+.setting-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 12px;
 }
-.field-input {
-  width: 100%; padding: 10px 12px;
+.setting-section-title {
+  padding: 12px 16px 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text2);
+}
+.setting-row {
+  display: flex; align-items: center;
+  padding: 14px 16px;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+}
+.setting-row:first-of-type { border-top: none; }
+.setting-row-icon {
+  width: 34px; height: 34px; flex-shrink: 0;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.setting-row-info { flex: 1; min-width: 0; }
+.setting-row-label { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.setting-row-sub   { font-size: 12px; color: var(--text2); }
+
+/* 비밀번호 변경 인라인 폼 */
+.pw-form { padding: 0 16px 14px; }
+.pw-input {
+  width: 100%; padding: 10px 13px; margin-bottom: 8px;
   background: var(--bg3); border: 1px solid var(--border);
-  border-radius: 8px; color: var(--text);
+  border-radius: 9px; color: var(--text);
   font-family: var(--font); font-size: 14px; outline: none;
   transition: border-color 0.2s;
 }
-.field-input:focus { border-color: var(--accent); }
-
-.btn-save {
-  padding: 10px; width: 100%;
-  background: linear-gradient(135deg, var(--accent), #6d5ce7);
-  border: none; border-radius: 10px; color: #fff;
-  font-family: var(--font); font-size: 13px; font-weight: 600;
+.pw-input:focus { border-color: var(--accent); }
+.pw-input::placeholder { color: var(--text2); opacity: 0.5; }
+.pw-save {
+  width: 100%; padding: 10px;
+  background: linear-gradient(135deg, var(--accent), #6050e0);
+  border: none; border-radius: 9px;
+  color: #fff; font-family: var(--font); font-size: 13px; font-weight: 600;
   cursor: pointer; transition: opacity 0.15s;
 }
-.btn-save:hover { opacity: 0.9; }
-
-.btn-logout {
-  padding: 10px; width: 100%;
-  background: rgba(248,113,113,0.1);
-  border: 1px solid rgba(248,113,113,0.25);
-  border-radius: 10px; color: var(--danger);
-  font-family: var(--font); font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: background 0.15s;
-  margin-top: auto;
-}
-.btn-logout:hover { background: rgba(248,113,113,0.2); }
-
-.panel-spacer { flex: 1; min-height: 12px; }
-
-.panel-msg {
+.pw-save:hover { opacity: 0.88; }
+.pw-msg {
   font-size: 12px; color: var(--success);
-  text-align: center; display: none;
+  text-align: center; margin-top: 6px; display: none;
 }
+
+/* 로그아웃 버튼 */
+.btn-logout {
+  width: 100%; padding: 13px;
+  background: rgba(248,113,113,0.09);
+  border: 1px solid rgba(248,113,113,0.25);
+  border-radius: 13px;
+  color: var(--danger); font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; margin-top: 4px;
+  transition: background 0.15s;
+}
+.btn-logout:hover { background: rgba(248,113,113,0.18); }

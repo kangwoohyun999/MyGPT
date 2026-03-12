@@ -1,6 +1,6 @@
-/* =====================================================
-   base.css  —  CSS 변수 / 리셋 / 공통
-   ===================================================== */
+/* ==============================================
+   base.css — 리셋, 변수, 공통
+   ============================================== */
 :root {
   --bg:       #0a0a0f;
   --bg2:      #111118;
@@ -15,9 +15,6 @@
   --text2:    #9999bb;
   --danger:   #f87171;
   --success:  #34d399;
-  --topbar-h: 56px;
-  --nav-h:    58px;
-  --sidebar:  280px;
   --font:     'Pretendard', -apple-system, sans-serif;
   --mono:     'Space Mono', monospace;
 }
@@ -25,8 +22,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
-  height: 100%;
-  width: 100%;
+  width: 100%; height: 100%;
   overflow: hidden;
   font-family: var(--font);
   background: var(--bg);
@@ -39,35 +35,23 @@ html, body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-/* 공통 아이콘 버튼 */
-.icon-btn {
-  width: 36px; height: 36px;
-  border-radius: 8px;
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--text2);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-  flex-shrink: 0;
-}
-.icon-btn:hover  { background: var(--bg3); color: var(--text); border-color: var(--border); }
-.icon-btn.active { background: var(--surface); color: var(--accent2); border-color: var(--border2); }
-
 /* 토스트 */
 .toast {
   position: fixed;
-  bottom: calc(var(--nav-h) + 12px); left: 50%;
-  transform: translateX(-50%);
+  bottom: 72px; left: 50%;
+  transform: translateX(-50%) translateY(8px);
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 18px;
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 9px 18px;
   font-size: 13px; color: var(--text);
-  z-index: 500;
+  z-index: 9999;
   opacity: 0; pointer-events: none;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, transform 0.2s;
   white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
-.toast.show { opacity: 1; }
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

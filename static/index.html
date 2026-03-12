@@ -9,134 +9,144 @@
 <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/base.css"/>
 <link rel="stylesheet" href="css/login.css"/>
-<link rel="stylesheet" href="css/layout.css"/>
+<link rel="stylesheet" href="css/app.css"/>
+<link rel="stylesheet" href="css/home.css"/>
 <link rel="stylesheet" href="css/chat.css"/>
+<link rel="stylesheet" href="css/sidebar.css"/>
 <link rel="stylesheet" href="css/profile.css"/>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════
-     로그인 페이지
+<!-- ════════════════════════════════════════════
+     [1단계] 로그인 페이지
+     표시/숨김: #page-login  (class="hidden" 으로 숨김)
      디자인: css/login.css | 동작: js/auth.js
-════════════════════════════════════════ -->
-<div id="login-page">
-  <div class="login-bg"></div>
-  <div class="login-box">
+════════════════════════════════════════════ -->
+<div id="page-login">
+  <div class="login-glow"></div>
+  <div class="login-card">
+
     <div class="login-logo">
-      <div class="login-logo-icon">🤖</div>
+      <div class="login-logo-mark">🤖</div>
       <h1>MyGPT</h1>
     </div>
-    <label class="login-label">아이디</label>
-    <input class="login-input" id="login-username" type="text"
-           placeholder="아이디 입력" autocomplete="username"/>
-    <label class="login-label">비밀번호</label>
-    <input class="login-input" id="login-password" type="password"
-           placeholder="비밀번호 입력" autocomplete="current-password"/>
+
+    <div class="login-field">
+      <label for="login-username">아이디</label>
+      <input id="login-username" type="text"
+             placeholder="아이디를 입력하세요" autocomplete="username"/>
+    </div>
+
+    <div class="login-field">
+      <label for="login-password">비밀번호</label>
+      <input id="login-password" type="password"
+             placeholder="비밀번호를 입력하세요" autocomplete="current-password"/>
+    </div>
+
     <p class="login-hint">※ 처음 로그인하면 자동으로 계정이 만들어집니다</p>
     <div class="login-error" id="login-error"></div>
     <button class="btn-login" id="login-btn" onclick="doLogin()">시작하기 →</button>
+
   </div>
 </div>
 
 
-<!-- ══════════════════════════════════════
-     메인 앱
-════════════════════════════════════════ -->
-<div id="app">
+<!-- ════════════════════════════════════════════
+     [2단계] 메인 앱  (로그인 후 표시)
+     구조: 상단 헤더 + 중간 콘텐츠 + 하단 탭바
+════════════════════════════════════════════ -->
+<div id="page-app">
 
-  <!-- 상단 바 · css/layout.css -->
-  <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-logo">
-        <div class="topbar-logo-icon">🤖</div>
-        <span>MyGPT</span>
+  <!-- ──────────────────────────────
+       [상단] 앱 헤더
+       디자인: css/app.css
+  ────────────────────────────────── -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="header-logo" onclick="goHome()">
+        <div class="header-logo-mark">🤖</div>
+        <span class="header-logo-text">MyGPT</span>
       </div>
-      <div class="topbar-greeting">
-        안녕하세요, <strong id="greeting-name">사용자</strong>님 👋
-      </div>
-    </div>
-    <div class="topbar-right">
-      <button class="icon-btn" id="sidebar-toggle-btn"
-              onclick="toggleSidebar()" title="사이드바 열기/닫기">☰</button>
-      <button class="icon-btn" onclick="openProfile()" title="프로필">👤</button>
-    </div>
-  </div>
-
-  <!-- 바디 (사이드바 + 메인) -->
-  <div class="app-body">
-
-    <!-- 사이드바 · css/layout.css | js/conversations.js -->
-    <div class="sidebar" id="sidebar">
-      <div class="sidebar-top">
-        <button class="btn-new-chat" onclick="newChat()">＋ 새 채팅</button>
-        <div class="search-box">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-          <input class="search-input" id="search-input"
-                 placeholder="대화 검색..." oninput="filterChats(this.value)"/>
-        </div>
-      </div>
-      <div class="sidebar-label">최근 대화</div>
-      <div class="chat-list" id="chat-list">
-        <div class="sidebar-empty">아직 대화가 없어요.<br/>새 채팅을 시작해보세요! 💬</div>
+      <div class="header-greeting">
+        안녕하세요, <strong id="header-username">사용자</strong>님 👋
       </div>
     </div>
+    <div class="header-right">
+      <button class="hdr-btn" onclick="goNewChat()" title="새 채팅">✏️</button>
+      <button class="hdr-btn" onclick="goProfile()" title="프로필">👤</button>
+    </div>
+  </header>
 
-    <!-- 메인 콘텐츠 -->
-    <div class="main-content" id="main-content">
 
-      <!-- 홈 화면 · css/chat.css | js/chat.js -->
-      <div class="home-screen" id="home-screen">
-        <div class="home-hero">
-          <div class="home-icon">🤖</div>
-          <div class="home-title">무엇을 도와드릴까요?</div>
-          <div class="home-sub">
-            GPT 기반 AI 어시스턴트입니다.<br/>
-            아래 예시를 클릭하거나 직접 메시지를 입력해보세요.
-          </div>
-        </div>
-        <!-- ✏️ 추천 카드 추가·수정 -->
-        <div class="suggestion-grid">
-          <div class="suggestion-card" onclick="startWithPrompt('파이썬으로 간단한 계산기 코드를 만들어줘')">
-            <div class="s-icon">💻</div>
-            <div class="s-text">파이썬으로 간단한 계산기 코드를 만들어줘</div>
-          </div>
-          <div class="suggestion-card" onclick="startWithPrompt('오늘 점심 메뉴 추천해줘')">
-            <div class="s-icon">🍱</div>
-            <div class="s-text">오늘 점심 메뉴 추천해줘</div>
-          </div>
-          <div class="suggestion-card" onclick="startWithPrompt('영어 이메일 쓰는 법 알려줘')">
-            <div class="s-icon">✉️</div>
-            <div class="s-text">영어 이메일 쓰는 법 알려줘</div>
-          </div>
-          <div class="suggestion-card" onclick="startWithPrompt('퀀텀 컴퓨터가 뭔지 쉽게 설명해줘')">
-            <div class="s-icon">⚛️</div>
-            <div class="s-text">퀀텀 컴퓨터가 뭔지 쉽게 설명해줘</div>
-          </div>
+  <!-- ──────────────────────────────
+       [중간] 탭 화면 컨테이너
+       각 탭 화면은 .tab-screen  |  활성: .active
+  ────────────────────────────────── -->
+  <main class="app-content">
+
+    <!-- ▸ 홈 탭
+         디자인: css/home.css | 동작: js/chat.js(startWithPrompt) -->
+    <section id="screen-home" class="tab-screen active">
+      <div class="home-hero">
+        <div class="home-bot-icon">🤖</div>
+        <div class="home-title">무엇을 도와드릴까요?</div>
+        <div class="home-sub">
+          GPT 기반 AI 어시스턴트입니다.<br/>
+          아래 예시를 클릭하거나 직접 채팅을 시작해보세요.
         </div>
       </div>
 
-      <!-- 채팅 화면 · css/chat.css | js/chat.js -->
-      <div class="chat-screen" id="chat-screen">
-        <div class="chat-header">
-          <div class="chat-header-title" id="chat-title">새 채팅</div>
-          <div class="model-badge">
-            <div class="model-dot"></div>GPT-4o mini
-          </div>
+      <!-- ✏️ 추천 카드: 텍스트·이모지 자유롭게 수정 -->
+      <div class="suggestion-grid">
+        <div class="suggestion-card"
+             onclick="startWithPrompt('파이썬으로 간단한 계산기 코드를 만들어줘')">
+          <div class="s-icon">💻</div>
+          <div class="s-text">파이썬으로 간단한 계산기 코드를 만들어줘</div>
         </div>
-        <div class="messages-area" id="messages-area"></div>
+        <div class="suggestion-card"
+             onclick="startWithPrompt('오늘 점심 메뉴 추천해줘')">
+          <div class="s-icon">🍱</div>
+          <div class="s-text">오늘 점심 메뉴 추천해줘</div>
+        </div>
+        <div class="suggestion-card"
+             onclick="startWithPrompt('영어 이메일 쓰는 법 알려줘')">
+          <div class="s-icon">✉️</div>
+          <div class="s-text">영어 이메일 쓰는 법 알려줘</div>
+        </div>
+        <div class="suggestion-card"
+             onclick="startWithPrompt('퀀텀 컴퓨터를 쉽게 설명해줘')">
+          <div class="s-icon">⚛️</div>
+          <div class="s-text">퀀텀 컴퓨터를 쉽게 설명해줘</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ▸ 채팅 탭
+         디자인: css/chat.css | 동작: js/chat.js -->
+    <section id="screen-chat" class="tab-screen">
+
+      <!-- 채팅 상단바 -->
+      <div class="chat-topbar">
+        <div class="chat-topbar-title" id="chat-topbar-title">새 채팅</div>
+        <div class="model-badge">
+          <div class="model-dot"></div>GPT-4o mini
+        </div>
       </div>
 
-      <!-- 입력 바 (홈/채팅 공통) · css/chat.css | js/chat.js -->
+      <!-- 메시지 영역 -->
+      <div class="messages-area" id="messages-area"></div>
+
+      <!-- 입력 바 -->
       <div class="input-bar">
         <div class="input-wrap">
           <textarea id="chat-input" rows="1"
-            placeholder="메시지를 입력하세요... (Enter 전송 / Shift+Enter 줄바꿈)"
+            placeholder="메시지 입력... (Enter 전송 / Shift+Enter 줄바꿈)"
             onkeydown="handleKey(event)"
             oninput="autoResize(this)"></textarea>
-          <button class="send-btn" id="send-btn" onclick="sendMessage()" title="전송">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <button class="send-btn" id="send-btn" onclick="sendMessage()">
+            <svg width="15" height="15" fill="none" stroke="currentColor"
+                 stroke-width="2.5" viewBox="0 0 24 24">
               <path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/>
             </svg>
           </button>
@@ -144,65 +154,142 @@
         <div class="input-hint">Enter 전송 · Shift+Enter 줄바꿈</div>
       </div>
 
-    </div><!-- /main-content -->
-  </div><!-- /app-body -->
+    </section>
 
-  <!-- 하단 네비게이션 · css/layout.css | js/ui.js -->
-  <div class="bottom-nav">
-    <button class="nav-item active" id="nav-home" onclick="goHome()">
-      <span class="nav-icon">🏠</span>
-      <span class="nav-label">홈</span>
+
+    <!-- ▸ 대화목록 탭
+         디자인: css/sidebar.css | 동작: js/conversations.js -->
+    <section id="screen-history" class="tab-screen">
+
+      <div class="history-topbar">
+        <h2>대화 목록</h2>
+        <div class="search-box">
+          <svg width="13" height="13" fill="none" stroke="currentColor"
+               stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input class="search-input" id="conv-search"
+                 placeholder="대화 검색..."
+                 oninput="filterConvs(this.value)"/>
+        </div>
+      </div>
+
+      <div class="conv-list" id="conv-list">
+        <div class="conv-empty">
+          <div class="conv-empty-icon">💬</div>
+          아직 대화가 없어요.<br/>새 채팅을 시작해보세요!
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ▸ 프로필 탭
+         디자인: css/profile.css | 동작: js/profile.js -->
+    <section id="screen-profile" class="tab-screen">
+      <div class="profile-page">
+
+        <!-- 아바타 + 이름 -->
+        <div class="profile-hero">
+          <div class="profile-avatar">👤</div>
+          <div class="profile-name" id="profile-display-name">사용자</div>
+          <div class="profile-badge">✦ 로컬 계정</div>
+        </div>
+
+        <!-- 비밀번호 변경 -->
+        <div class="setting-card">
+          <div class="setting-section-title">보안 설정</div>
+          <div class="setting-row">
+            <div class="setting-row-icon" style="background:rgba(124,106,247,0.12)">🔒</div>
+            <div class="setting-row-info">
+              <div class="setting-row-label">비밀번호 변경</div>
+              <div class="setting-row-sub">새 비밀번호를 설정합니다</div>
+            </div>
+          </div>
+          <div class="pw-form">
+            <input class="pw-input" id="new-pw-input" type="password"
+                   placeholder="새 비밀번호 (4자 이상)"/>
+            <button class="pw-save" onclick="savePassword()">저장하기</button>
+            <div class="pw-msg" id="pw-msg">✓ 비밀번호가 변경되었습니다!</div>
+          </div>
+        </div>
+
+        <!-- 앱 정보 -->
+        <div class="setting-card">
+          <div class="setting-section-title">앱 정보</div>
+          <div class="setting-row">
+            <div class="setting-row-icon" style="background:rgba(52,211,153,0.12)">🤖</div>
+            <div class="setting-row-info">
+              <div class="setting-row-label">모델</div>
+              <div class="setting-row-sub">GPT-4o mini</div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-icon" style="background:rgba(167,139,250,0.12)">⚡</div>
+            <div class="setting-row-info">
+              <div class="setting-row-label">API 키 로테이션</div>
+              <div class="setting-row-sub">Rate Limit 초과 시 자동 전환</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 로그아웃 -->
+        <button class="btn-logout" onclick="doLogout()">로그아웃</button>
+
+      </div>
+    </section>
+
+  </main><!-- /app-content -->
+
+
+  <!-- ──────────────────────────────
+       [하단] 탭 바
+       디자인: css/app.css | 동작: js/router.js
+  ────────────────────────────────── -->
+  <nav class="app-tabbar">
+
+    <button class="tab-btn active" id="tab-home" onclick="goHome()">
+      <span class="tab-icon">🏠</span>
+      <span class="tab-label">홈</span>
     </button>
-    <button class="nav-item" id="nav-chat" onclick="showChatNav()">
-      <span class="nav-icon">💬</span>
-      <span class="nav-label">채팅</span>
+
+    <button class="tab-btn" id="tab-history" onclick="goHistory()">
+      <span class="tab-icon">💬</span>
+      <span class="tab-label">대화목록</span>
     </button>
-    <button class="nav-item" id="nav-new" onclick="newChat()">
-      <span class="nav-icon">＋</span>
-      <span class="nav-label">새 채팅</span>
+
+    <button class="tab-btn tab-new" id="tab-new" onclick="goNewChat()">
+      <div class="tab-icon-wrap">✏️</div>
+      <span class="tab-label">새 채팅</span>
     </button>
-    <button class="nav-item" id="nav-profile" onclick="openProfile()">
-      <span class="nav-icon">👤</span>
-      <span class="nav-label">프로필</span>
+
+    <button class="tab-btn" id="tab-chat" onclick="switchTab('chat')">
+      <span class="tab-icon">⚡</span>
+      <span class="tab-label">채팅</span>
     </button>
-  </div>
 
-</div><!-- /app -->
+    <button class="tab-btn" id="tab-profile" onclick="goProfile()">
+      <span class="tab-icon">👤</span>
+      <span class="tab-label">프로필</span>
+    </button>
+
+  </nav>
+
+</div><!-- /page-app -->
 
 
-<!-- 프로필 패널 · css/profile.css | js/ui.js -->
-<div class="side-panel" id="profile-panel">
-  <div class="panel-overlay" onclick="closeProfile()"></div>
-  <div class="panel-sheet">
-    <div class="panel-header">
-      <div class="panel-title">프로필 설정</div>
-      <button class="panel-close" onclick="closeProfile()">✕</button>
-    </div>
-    <div class="profile-avatar">👤</div>
-    <div class="profile-name" id="profile-username">사용자</div>
-    <div class="profile-sub">로컬 계정</div>
-    <div>
-      <span class="field-label">새 비밀번호</span>
-      <input class="field-input" id="new-password" type="password"
-             placeholder="변경할 비밀번호 (4자 이상)"/>
-    </div>
-    <button class="btn-save" onclick="saveProfile()">저장하기</button>
-    <div class="panel-msg" id="panel-msg">✓ 저장되었습니다!</div>
-    <div class="panel-spacer"></div>
-    <button class="btn-logout" onclick="doLogout()">로그아웃</button>
-  </div>
-</div>
-
-<!-- 토스트 알림 · css/base.css -->
+<!-- 토스트 알림 -->
 <div class="toast" id="toast"></div>
 
 
-<!-- JS 로드 순서 중요: state → auth → conversations → chat → ui -->
+<!-- JS 로드 순서: state → router → auth → conversations → chat → profile -->
 <script src="js/state.js"></script>
+<script src="js/router.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/conversations.js"></script>
 <script src="js/chat.js"></script>
-<script src="js/ui.js"></script>
+<script src="js/profile.js"></script>
 <script>checkSession();</script>
 
 </body>

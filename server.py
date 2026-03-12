@@ -29,7 +29,7 @@ def _load_api_keys():
         if k and k.startswith("sk-"):
             keys.append(k)
     # 단일 키 (OPENAI_API_KEY)
-    single = os.environ.get("OPENAI_API_KEY", "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").strip()
+    single = os.environ.get("OPENAI_API_KEY", "").strip()
     if single and single.startswith("sk-") and single not in keys:
         keys.insert(0, single)
     # 로컬 테스트용 하드코딩 폴백 (배포 시엔 환경변수 사용 권장)
