@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MyGPT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #0a0a0f;
+  --bg2:      #111118;
+  --bg3:      #1a1a24;
+  --surface:  #1e1e2e;
+  --border:   #2a2a3d;
+  --border2:  #3a3a55;
+  --accent:   #7c6af7;
+  --accent2:  #a78bfa;
+  --accent3:  #c4b5fd;
+  --text:     #e8e8f0;
+  --text2:    #9999bb;
+  --text3:    #5555778;
+  --danger:   #f87171;
+  --success:  #34d399;
+  --radius:   14px;
+  --sidebar:  280px;
+  --font:     'Pretendard', -apple-system, sans-serif;
+  --mono:     'Space Mono', monospace;
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ═══════════════════════════════════════════
+   LOGIN PAGE
+═══════════════════════════════════════════ */
+#login-page {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg);
+  z-index: 1000;
+}
+
+.login-bg {
+  position: absolute; inset: 0; overflow: hidden;
+}
+.login-bg::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -60%);
+  background: radial-gradient(circle, rgba(124,106,247,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: pulse 4s ease-in-out infinite;
+}
+.login-bg::after {
+  content: '';
+  position: absolute;
+  width: 300px; height: 300px;
+  bottom: 10%; right: 10%;
+  background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: pulse 6s ease-in-out infinite reverse;
+}
+@keyframes pulse {
+  0%, 100% { transform: translate(-50%, -60%) scale(1); }
+  50% { transform: translate(-50%, -60%) scale(1.1); }
+}
+
+.login-box {
+  position: relative;
+  width: 100%; max-width: 400px;
+  padding: 48px 40px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-logo {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 36px;
+}
+.login-logo-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.login-logo h1 {
+  font-size: 24px; font-weight: 700; letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #fff 40%, var(--accent3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.login-label {
+  display: block;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--text2);
+  text-transform: uppercase;
+  margin-bottom: 8px; margin-top: 20px;
+}
+.login-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.login-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124,106,247,0.15);
+}
+.login-input::placeholder { color: var(--text2); opacity: 0.6; }
+
+.login-hint {
+  font-size: 12px; color: var(--text2);
+  margin-top: 6px; line-height: 1.5;
+}
+
+.btn-login {
+  width: 100%; margin-top: 28px;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--accent), #6d5ce7);
+  border: none; border-radius: 12px;
+  color: #fff;
+  font-family: var(--font);
+  font-size: 15px; font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  letter-spacing: 0.02em;
+}
+.btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(124,106,247,0.35); }
+.btn-login:active { transform: translateY(0); }
+.btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.login-error {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: rgba(248,113,113,0.1);
+  border: 1px solid rgba(248,113,113,0.25);
+  border-radius: 8px;
+  color: var(--danger);
+  font-size: 13px;
+  display: none;
+}
+
+/* ═══════════════════════════════════════════
+   MAIN APP
+═══════════════════════════════════════════ */
+#app {
+  display: none;
+  height: 100vh;
+  flex-direction: column;
+}
+#app.visible { display: flex; }
+
+/* ── TOP BAR ── */
+.topbar {
+  height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 10;
+}
+.topbar-left {
+  display: flex; align-items: center; gap: 12px;
+}
+.topbar-logo {
+  display: flex; align-items: center; gap: 10px;
+}
+.topbar-logo-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.topbar-logo span {
+  font-size: 16px; font-weight: 700; letter-spacing: -0.3px;
+  background: linear-gradient(135deg, #fff 40%, var(--accent3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.topbar-greeting {
+  font-size: 13px; color: var(--text2);
+  padding-left: 16px;
+  border-left: 1px solid var(--border);
+}
+.topbar-greeting strong { color: var(--text); font-weight: 600; }
+
+.topbar-right {
+  display: flex; align-items: center; gap: 8px;
+}
+.icon-btn {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.icon-btn:hover { background: var(--bg3); color: var(--text); border-color: var(--border); }
+.icon-btn.active { background: var(--surface); color: var(--accent2); border-color: var(--border2); }
+
+/* ── BODY LAYOUT ── */
+.app-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar);
+  flex-shrink: 0;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  transition: width 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.25s;
+  overflow: hidden;
+}
+.sidebar.collapsed {
+  width: 0;
+  opacity: 0;
+  border: none;
+}
+
+.sidebar-top {
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.btn-new-chat {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, var(--accent), #6d5ce7);
+  border: none; border-radius: 10px;
+  color: #fff;
+  font-family: var(--font);
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.btn-new-chat:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(124,106,247,0.4); }
+.btn-new-chat:active { transform: translateY(0); }
+
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.search-box svg { flex-shrink: 0; color: var(--text2); }
+.search-input {
+  flex: 1;
+  background: transparent; border: none; outline: none;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+}
+.search-input::placeholder { color: var(--text2); opacity: 0.6; }
+
+.sidebar-label {
+  padding: 12px 16px 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  color: var(--text2);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.chat-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 8px 16px;
+}
+
+.chat-item {
+  display: flex; align-items: center;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  gap: 10px;
+  margin-bottom: 2px;
+  transition: background 0.12s;
+  position: relative;
+  group: true;
+}
+.chat-item:hover { background: var(--bg3); }
+.chat-item.active { background: var(--surface); }
+.chat-item.active::before {
+  content: '';
+  position: absolute; left: 0; top: 4px; bottom: 4px;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 0 2px 2px 0;
+}
+.chat-item-icon {
+  width: 28px; height: 28px; flex-shrink: 0;
+  background: var(--bg3);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  color: var(--text2);
+}
+.chat-item.active .chat-item-icon { background: rgba(124,106,247,0.15); color: var(--accent2); }
+.chat-item-title {
+  flex: 1;
+  font-size: 13px; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.3;
+}
+.chat-item-del {
+  width: 22px; height: 22px;
+  border-radius: 4px;
+  background: transparent; border: none;
+  color: var(--text2);
+  cursor: pointer; font-size: 14px;
+  display: none; align-items: center; justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+.chat-item:hover .chat-item-del { display: flex; }
+.chat-item-del:hover { background: rgba(248,113,113,0.15); color: var(--danger); }
+
+.sidebar-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text2);
+  font-size: 13px; line-height: 1.6;
+}
+
+/* ── MAIN CONTENT ── */
+.main-content {
+  flex: 1;
+  display: flex; flex-direction: column;
+  min-width: 0;
+  background: var(--bg);
+}
+
+/* Home screen */
+.home-screen {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0;
+  padding: 40px 20px;
+}
+.home-hero {
+  text-align: center; margin-bottom: 48px;
+}
+.home-icon {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, rgba(124,106,247,0.15), rgba(167,139,250,0.1));
+  border: 1px solid rgba(124,106,247,0.25);
+  border-radius: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  margin: 0 auto 24px;
+  animation: floatIcon 3s ease-in-out infinite;
+}
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.home-title {
+  font-size: 32px; font-weight: 700; letter-spacing: -1px;
+  background: linear-gradient(135deg, #fff 30%, var(--accent3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 12px;
+}
+.home-sub {
+  font-size: 15px; color: var(--text2);
+  max-width: 420px; line-height: 1.65;
+}
+
+.suggestion-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-width: 520px; width: 100%;
+  margin-bottom: 36px;
+}
+.suggestion-card {
+  padding: 14px 16px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  text-align: left;
+}
+.suggestion-card:hover {
+  background: var(--surface);
+  border-color: rgba(124,106,247,0.4);
+  transform: translateY(-2px);
+}
+.suggestion-card .s-icon { font-size: 18px; margin-bottom: 6px; }
+.suggestion-card .s-text { font-size: 12px; color: var(--text); line-height: 1.4; font-weight: 500; }
+
+/* Chat screen */
+.chat-screen {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+.chat-screen.visible { display: flex; }
+
+.chat-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 12px;
+}
+.chat-header-title {
+  flex: 1;
+  font-size: 14px; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.model-badge {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  background: rgba(124,106,247,0.1);
+  border: 1px solid rgba(124,106,247,0.2);
+  border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+  color: var(--accent2); letter-spacing: 0.04em;
+}
+.model-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent2);
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 0;
+  display: flex; flex-direction: column; gap: 0;
+}
+
+.msg-row {
+  display: flex;
+  padding: 6px 20px;
+  animation: msgIn 0.25s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.msg-row.user { justify-content: flex-end; }
+.msg-row.assistant { justify-content: flex-start; }
+
+.msg-bubble {
+  max-width: 72%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px; line-height: 1.65;
+}
+.msg-row.user .msg-bubble {
+  background: linear-gradient(135deg, var(--accent), #6d5ce7);
+  color: #fff;
+  border-radius: 16px 16px 4px 16px;
+}
+.msg-row.assistant .msg-bubble {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 16px 16px 16px 4px;
+}
+
+.msg-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  margin-top: 2px;
+}
+.msg-row.assistant .msg-avatar {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  margin-right: 10px;
+}
+.msg-row.user .msg-avatar {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  margin-left: 10px;
+}
+
+.msg-time {
+  font-size: 10px; color: var(--text2);
+  margin-top: 4px; text-align: right;
+  padding: 0 4px;
+}
+.msg-row.assistant .msg-time { text-align: left; }
+
+/* Typing indicator */
+.typing-row { display: flex; padding: 6px 20px; }
+.typing-bubble {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 14px 18px; border-radius: 16px 16px 16px 4px;
+  display: flex; gap: 5px; align-items: center;
+}
+.typing-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent2);
+  animation: typingBounce 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+/* ── INPUT BAR ── */
+.input-bar {
+  padding: 16px 20px 20px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+.input-wrap {
+  display: flex; align-items: flex-end; gap: 10px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-wrap:focus-within {
+  border-color: rgba(124,106,247,0.5);
+  box-shadow: 0 0 0 3px rgba(124,106,247,0.1);
+}
+#chat-input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--text);
+  font-family: var(--font); font-size: 14px;
+  resize: none; line-height: 1.5;
+  max-height: 180px;
+  scrollbar-width: none;
+}
+#chat-input::placeholder { color: var(--text2); opacity: 0.55; }
+#chat-input::-webkit-scrollbar { display: none; }
+
+.send-btn {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), #6d5ce7);
+  border: none; color: #fff;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+.send-btn:hover { transform: scale(1.08); box-shadow: 0 4px 12px rgba(124,106,247,0.4); }
+.send-btn:active { transform: scale(0.96); }
+.send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.input-hint {
+  font-size: 11px; color: var(--text2);
+  text-align: center; margin-top: 8px;
+  opacity: 0.7;
+}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  height: 58px;
+  display: flex; align-items: center; justify-content: space-around;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.nav-item {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--text2);
+  transition: color 0.15s;
+  background: none; border: none; font-family: var(--font);
+}
+.nav-item:hover { color: var(--text); }
+.nav-item.active { color: var(--accent2); }
+.nav-icon { font-size: 20px; }
+.nav-label { font-size: 10px; font-weight: 500; letter-spacing: 0.04em; }
+
+/* ── PROFILE PANEL ── */
+.side-panel {
+  position: fixed; inset: 0;
+  z-index: 200;
+  display: none;
+}
+.side-panel.open { display: flex; }
+.panel-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+}
+.panel-sheet {
+  position: absolute; right: 0; top: 0; bottom: 0;
+  width: 320px;
+  background: var(--bg2);
+  border-left: 1px solid var(--border);
+  padding: 28px 24px;
+  display: flex; flex-direction: column; gap: 20px;
+  animation: slideIn 0.25s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-title { font-size: 18px; font-weight: 700; }
+.panel-close {
+  width: 32px; height: 32px;
+  background: var(--bg3); border: none; border-radius: 8px;
+  color: var(--text2); cursor: pointer; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+.panel-close:hover { background: var(--surface); color: var(--text); }
+
+.profile-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; margin: 0 auto;
+  box-shadow: 0 0 0 4px rgba(124,106,247,0.2);
+}
+.profile-name {
+  text-align: center; font-size: 18px; font-weight: 700; margin-top: 8px;
+}
+.profile-sub { text-align: center; color: var(--text2); font-size: 13px; }
+
+.field-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text2);
+  margin-bottom: 6px; display: block;
+}
+.field-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font); font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field-input:focus { border-color: var(--accent); }
+
+.btn-save {
+  padding: 10px 18px;
+  background: linear-gradient(135deg, var(--accent), #6d5ce7);
+  border: none; border-radius: 10px;
+  color: #fff; font-family: var(--font); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: opacity 0.15s;
+  width: 100%;
+}
+.btn-save:hover { opacity: 0.9; }
+
+.btn-logout {
+  padding: 10px 18px;
+  background: rgba(248,113,113,0.1);
+  border: 1px solid rgba(248,113,113,0.25);
+  border-radius: 10px;
+  color: var(--danger); font-family: var(--font); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
+  width: 100%;
+}
+.btn-logout:hover { background: rgba(248,113,113,0.2); }
+
+.panel-msg {
+  font-size: 12px; color: var(--success); text-align: center;
+  display: none;
+}
+
+/* ── API KEY SETUP BANNER ── */
+.api-banner {
+  margin: 16px 20px 0;
+  padding: 14px 16px;
+  background: rgba(124,106,247,0.08);
+  border: 1px solid rgba(124,106,247,0.2);
+  border-radius: 12px;
+  font-size: 13px; color: var(--text2);
+  line-height: 1.55;
+  flex-shrink: 0;
+}
+.api-banner strong { color: var(--accent2); }
+.api-banner code {
+  font-family: var(--mono);
+  background: rgba(124,106,247,0.15);
+  padding: 1px 5px; border-radius: 4px;
+  font-size: 11px; color: var(--accent3);
+}
+
+/* Markdown in messages */
+.msg-bubble pre {
+  background: rgba(0,0,0,0.3);
+  padding: 10px 12px; border-radius: 8px;
+  overflow-x: auto; margin: 8px 0;
+  font-family: var(--mono); font-size: 12px; line-height: 1.55;
+}
+.msg-bubble code:not(pre code) {
+  background: rgba(0,0,0,0.25);
+  padding: 1px 5px; border-radius: 4px;
+  font-family: var(--mono); font-size: 12px;
+}
+.msg-bubble p { margin-bottom: 6px; }
+.msg-bubble p:last-child { margin-bottom: 0; }
+.msg-bubble ul, .msg-bubble ol { padding-left: 18px; margin: 6px 0; }
+.msg-bubble li { margin-bottom: 3px; }
+.msg-bubble h1, .msg-bubble h2, .msg-bubble h3 {
+  font-weight: 700; margin: 10px 0 4px;
+  line-height: 1.3;
+}
+.msg-bubble strong { font-weight: 700; }
+.msg-bubble em { font-style: italic; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 13px; color: var(--text);
+  z-index: 999;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ LOGIN PAGE ═══════════════ -->
+<div id="login-page">
+  <div class="login-bg"></div>
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-icon">🤖</div>
+      <h1>MyGPT</h1>
+    </div>
+    <label class="login-label">아이디</label>
+    <input class="login-input" id="login-username" type="text" placeholder="아이디 입력" autocomplete="username"/>
+    <label class="login-label">비밀번호</label>
+    <input class="login-input" id="login-password" type="password" placeholder="비밀번호 입력" autocomplete="current-password"/>
+    <p class="login-hint">※ 처음 로그인하면 자동으로 계정이 만들어집니다</p>
+    <div class="login-error" id="login-error"></div>
+    <button class="btn-login" id="login-btn" onclick="doLogin()">시작하기 →</button>
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN APP ═══════════════ -->
+<div id="app">
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">
+        <div class="topbar-logo-icon">🤖</div>
+        <span>MyGPT</span>
+      </div>
+      <div class="topbar-greeting">안녕하세요, <strong id="greeting-name">사용자</strong>님 👋</div>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" id="sidebar-toggle-btn" onclick="toggleSidebar()" title="사이드바">☰</button>
+      <button class="icon-btn" onclick="openProfile()" title="프로필">👤</button>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="app-body">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <button class="btn-new-chat" onclick="newChat()">＋ 새 채팅</button>
+        <div class="search-box">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="search-input" id="search-input" placeholder="대화 검색..." oninput="filterChats(this.value)"/>
+        </div>
+      </div>
+      <div class="sidebar-label">최근 대화</div>
+      <div class="chat-list" id="chat-list">
+        <div class="sidebar-empty">아직 대화가 없어요.<br/>새 채팅을 시작해보세요! 💬</div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="main-content" id="main-content">
+      <!-- Home Screen -->
+      <div class="home-screen" id="home-screen">
+        <div class="home-hero">
+          <div class="home-icon">🤖</div>
+          <div class="home-title">무엇을 도와드릴까요?</div>
+          <div class="home-sub">GPT 기반 AI 어시스턴트입니다. 아래 예시를 클릭하거나 직접 메시지를 입력해보세요.</div>
+        </div>
+        <div class="suggestion-grid">
+          <div class="suggestion-card" onclick="startWithPrompt('파이썬으로 간단한 계산기 코드를 만들어줘')">
+            <div class="s-icon">💻</div>
+            <div class="s-text">파이썬으로 간단한 계산기 코드를 만들어줘</div>
+          </div>
+          <div class="suggestion-card" onclick="startWithPrompt('오늘 점심 메뉴 추천해줘')">
+            <div class="s-icon">🍱</div>
+            <div class="s-text">오늘 점심 메뉴 추천해줘</div>
+          </div>
+          <div class="suggestion-card" onclick="startWithPrompt('영어 이메일 쓰는 법 알려줘')">
+            <div class="s-icon">✉️</div>
+            <div class="s-text">영어 이메일 쓰는 법 알려줘</div>
+          </div>
+          <div class="suggestion-card" onclick="startWithPrompt('퀀텀 컴퓨터가 뭔지 쉽게 설명해줘')">
+            <div class="s-icon">⚛️</div>
+            <div class="s-text">퀀텀 컴퓨터가 뭔지 쉽게 설명해줘</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Screen -->
+      <div class="chat-screen" id="chat-screen">
+        <div class="chat-header">
+          <div class="chat-header-title" id="chat-title">새 채팅</div>
+          <div class="model-badge"><div class="model-dot"></div>GPT-4o mini</div>
+        </div>
+        <div class="messages-area" id="messages-area"></div>
+      </div>
+
+      <!-- Input Bar (always visible) -->
+      <div class="input-bar">
+        <div class="input-wrap">
+          <textarea id="chat-input" placeholder="메시지를 입력하세요... (Enter로 전송, Shift+Enter 줄바꿈)" rows="1"
+            onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="input-hint">Enter 전송 · Shift+Enter 줄바꿈</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="goHome()">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">홈</span>
+    </button>
+    <button class="nav-item" id="nav-chat" onclick="showChatNav()">
+      <span class="nav-icon">💬</span>
+      <span class="nav-label">채팅</span>
+    </button>
+    <button class="nav-item" id="nav-new" onclick="newChat()">
+      <span class="nav-icon">＋</span>
+      <span class="nav-label">새 채팅</span>
+    </button>
+    <button class="nav-item" id="nav-profile" onclick="openProfile()">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">프로필</span>
+    </button>
+  </div>
+</div>
+
+<!-- Profile Panel -->
+<div class="side-panel" id="profile-panel">
+  <div class="panel-overlay" onclick="closeProfile()"></div>
+  <div class="panel-sheet">
+    <div class="panel-header">
+      <div class="panel-title">프로필 설정</div>
+      <button class="panel-close" onclick="closeProfile()">✕</button>
+    </div>
+    <div class="profile-avatar">👤</div>
+    <div class="profile-name" id="profile-username">사용자</div>
+    <div class="profile-sub">로컬 계정</div>
+    <div>
+      <span class="field-label">새 비밀번호</span>
+      <input class="field-input" id="new-password" type="password" placeholder="변경할 비밀번호 (4자 이상)"/>
+    </div>
+    <button class="btn-save" onclick="saveProfile()">저장하기</button>
+    <div class="panel-msg" id="panel-msg">✓ 저장되었습니다!</div>
+    <div style="flex:1"></div>
+    <button class="btn-logout" onclick="doLogout()">로그아웃</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let TOKEN = localStorage.getItem('mygpt_token') || '';
+let USERNAME = localStorage.getItem('mygpt_user') || '';
+let CURRENT_CONV_ID = null;
+let ALL_CONVS = [];
+let IS_SENDING = false;
+let SIDEBAR_OPEN = true;
+
+const API = '';  // same origin
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+async function api(method, path, body) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}` },
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(API + path, opts);
+  return r.json();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function formatTime(ts) {
+  if (!ts) return '';
+  const d = new Date(ts * 1000);
+  const h = d.getHours().toString().padStart(2,'0');
+  const m = d.getMinutes().toString().padStart(2,'0');
+  return `${h}:${m}`;
+}
+
+function escapeHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Basic markdown renderer
+function renderMarkdown(text) {
+  let h = escapeHtml(text);
+  // Code blocks
+  h = h.replace(/```[\s\S]*?```/g, m => {
+    const code = m.slice(3, -3).replace(/^\w+\n/, '');
+    return `<pre><code>${code}</code></pre>`;
+  });
+  // Inline code
+  h = h.replace(/`([^`]+)`/g, '<code>$1</code>');
+  // Bold
+  h = h.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  // Italic
+  h = h.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  // Headers
+  h = h.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  h = h.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  h = h.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+  // Lists
+  h = h.replace(/^\- (.+)$/gm, '<li>$1</li>');
+  h = h.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+  // Numbered lists
+  h = h.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+  // Paragraphs
+  h = h.split('\n\n').map(p => p.trim() ? `<p>${p.replace(/\n/g,'<br>')}</p>` : '').join('');
+  return h || escapeHtml(text);
+}
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const u = document.getElementById('login-username').value.trim();
+  const p = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+
+  if (!u || !p) { showLoginError('아이디와 비밀번호를 입력해주세요'); return; }
+
+  btn.disabled = true; btn.textContent = '로그인 중...';
+  errEl.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({username: u, password: p})
+    });
+    const data = await res.json();
+    if (data.token) {
+      TOKEN = data.token;
+      USERNAME = data.username;
+      localStorage.setItem('mygpt_token', TOKEN);
+      localStorage.setItem('mygpt_user', USERNAME);
+      enterApp();
+    } else {
+      showLoginError(data.error || '로그인 실패');
+    }
+  } catch(e) {
+    showLoginError('서버 연결 실패. 서버가 실행 중인지 확인하세요.');
+  } finally {
+    btn.disabled = false; btn.textContent = '시작하기 →';
+  }
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent = msg; el.style.display = 'block';
+}
+
+async function doLogout() {
+  await api('POST', '/api/logout');
+  TOKEN = ''; USERNAME = '';
+  localStorage.removeItem('mygpt_token');
+  localStorage.removeItem('mygpt_user');
+  CURRENT_CONV_ID = null;
+  closeProfile();
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('login-password').value = '';
+}
+
+// ─── APP INIT ─────────────────────────────────────────────────────────────────
+async function enterApp() {
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+  document.getElementById('greeting-name').textContent = USERNAME;
+  document.getElementById('profile-username').textContent = USERNAME;
+  await loadConversations();
+  goHome();
+}
+
+async function checkSession() {
+  if (!TOKEN) return;
+  try {
+    const res = await api('GET', '/api/me');
+    if (res.username) {
+      USERNAME = res.username;
+      enterApp();
+    }
+  } catch(e) {}
+}
+
+// ─── CONVERSATIONS ─────────────────────────────────────────────────────────────
+async function loadConversations() {
+  try {
+    const res = await api('GET', '/api/chats');
+    ALL_CONVS = res.conversations || [];
+    renderChatList(ALL_CONVS);
+  } catch(e) {}
+}
+
+function renderChatList(convs) {
+  const el = document.getElementById('chat-list');
+  if (!convs.length) {
+    el.innerHTML = '<div class="sidebar-empty">아직 대화가 없어요.<br/>새 채팅을 시작해보세요! 💬</div>';
+    return;
+  }
+  el.innerHTML = convs.map(c => `
+    <div class="chat-item ${c.id === CURRENT_CONV_ID ? 'active' : ''}" id="ci-${c.id}" onclick="openConversation('${c.id}', '${escapeHtml(c.title)}')">
+      <div class="chat-item-icon">💬</div>
+      <div class="chat-item-title">${escapeHtml(c.title)}</div>
+      <button class="chat-item-del" onclick="event.stopPropagation(); deleteConv('${c.id}')" title="삭제">✕</button>
+    </div>
+  `).join('');
+}
+
+function filterChats(q) {
+  if (!q) { renderChatList(ALL_CONVS); return; }
+  const filtered = ALL_CONVS.filter(c => c.title.toLowerCase().includes(q.toLowerCase()));
+  renderChatList(filtered);
+}
+
+async function openConversation(id, title) {
+  CURRENT_CONV_ID = id;
+  document.getElementById('chat-title').textContent = title;
+
+  // Update sidebar highlight
+  document.querySelectorAll('.chat-item').forEach(el => {
+    el.classList.toggle('active', el.id === `ci-${id}`);
+  });
+
+  // Load messages
+  const res = await api('GET', `/api/chats/${id}`);
+  const msgs = res.messages || [];
+  const area = document.getElementById('messages-area');
+  area.innerHTML = '';
+  msgs.forEach(m => appendMessage(m.role, m.content, m.timestamp));
+  area.scrollTop = area.scrollHeight;
+
+  showChatScreen();
+  setNavActive('nav-chat');
+}
+
+async function newChat() {
+  const res = await api('POST', '/api/chats/new');
+  if (res.id) {
+    CURRENT_CONV_ID = res.id;
+    document.getElementById('messages-area').innerHTML = '';
+    document.getElementById('chat-title').textContent = '새 채팅';
+    showChatScreen();
+    document.getElementById('chat-input').focus();
+    setNavActive('nav-chat');
+    await loadConversations();
+  }
+}
+
+async function deleteConv(id) {
+  if (!confirm('이 대화를 삭제할까요?')) return;
+  await api('POST', `/api/chats/${id}/delete`);
+  if (CURRENT_CONV_ID === id) {
+    CURRENT_CONV_ID = null;
+    goHome();
+  }
+  await loadConversations();
+  showToast('대화가 삭제되었습니다');
+}
+
+// ─── CHAT ─────────────────────────────────────────────────────────────────────
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg || IS_SENDING) return;
+
+  // Ensure we have a conversation
+  if (!CURRENT_CONV_ID) {
+    const res = await api('POST', '/api/chats/new');
+    if (!res.id) return;
+    CURRENT_CONV_ID = res.id;
+    showChatScreen();
+  }
+
+  IS_SENDING = true;
+  document.getElementById('send-btn').disabled = true;
+  input.value = ''; autoResize(input);
+
+  appendMessage('user', msg, Date.now()/1000);
+
+  // Typing indicator
+  const area = document.getElementById('messages-area');
+  const typing = document.createElement('div');
+  typing.className = 'typing-row'; typing.id = 'typing';
+  typing.innerHTML = `
+    <div class="msg-avatar" style="background:linear-gradient(135deg,var(--accent),var(--accent2));margin-right:10px">🤖</div>
+    <div class="typing-bubble">
+      <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+    </div>`;
+  area.appendChild(typing);
+  area.scrollTop = area.scrollHeight;
+
+  try {
+    const res = await api('POST', '/api/chat', { conversation_id: CURRENT_CONV_ID, message: msg });
+    typing.remove();
+    if (res.reply) {
+      appendMessage('assistant', res.reply, Date.now()/1000);
+      // Update chat title in sidebar
+      if (document.getElementById('chat-title').textContent === '새 채팅') {
+        const title = msg.slice(0, 30);
+        document.getElementById('chat-title').textContent = title;
+      }
+      await loadConversations();
+    } else {
+      appendMessage('assistant', res.error || '오류가 발생했습니다', Date.now()/1000);
+    }
+  } catch(e) {
+    typing.remove();
+    appendMessage('assistant', '⚠️ 서버 오류: ' + e.message, Date.now()/1000);
+  } finally {
+    IS_SENDING = false;
+    document.getElementById('send-btn').disabled = false;
+    area.scrollTop = area.scrollHeight;
+  }
+}
+
+function appendMessage(role, content, timestamp) {
+  const area = document.getElementById('messages-area');
+  const row = document.createElement('div');
+  row.className = `msg-row ${role}`;
+  const time = formatTime(timestamp);
+  const html = role === 'assistant' ? renderMarkdown(content) : `<p>${escapeHtml(content)}</p>`;
+  if (role === 'assistant') {
+    row.innerHTML = `
+      <div class="msg-avatar">🤖</div>
+      <div>
+        <div class="msg-bubble">${html}</div>
+        <div class="msg-time">${time}</div>
+      </div>`;
+  } else {
+    row.innerHTML = `
+      <div>
+        <div class="msg-bubble">${html}</div>
+        <div class="msg-time">${time}</div>
+      </div>
+      <div class="msg-avatar" style="background:var(--bg3);border:1px solid var(--border);font-size:14px">👤</div>`;
+  }
+  area.appendChild(row);
+  area.scrollTop = area.scrollHeight;
+}
+
+async function startWithPrompt(prompt) {
+  await newChat();
+  document.getElementById('chat-input').value = prompt;
+  await sendMessage();
+}
+
+// ─── UI ────────────────────────────────────────────────────────────────────────
+function showChatScreen() {
+  document.getElementById('home-screen').style.display = 'none';
+  document.getElementById('chat-screen').classList.add('visible');
+}
+
+function goHome() {
+  CURRENT_CONV_ID = null;
+  document.getElementById('home-screen').style.display = '';
+  document.getElementById('chat-screen').classList.remove('visible');
+  document.getElementById('messages-area').innerHTML = '';
+  setNavActive('nav-home');
+  document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
+}
+
+function showChatNav() {
+  if (ALL_CONVS.length > 0) {
+    openConversation(ALL_CONVS[0].id, ALL_CONVS[0].title);
+  } else {
+    newChat();
+  }
+}
+
+function setNavActive(id) {
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+}
+
+function toggleSidebar() {
+  SIDEBAR_OPEN = !SIDEBAR_OPEN;
+  document.getElementById('sidebar').classList.toggle('collapsed', !SIDEBAR_OPEN);
+  document.getElementById('sidebar-toggle-btn').classList.toggle('active', SIDEBAR_OPEN);
+}
+
+function openProfile() {
+  document.getElementById('profile-panel').classList.add('open');
+  setNavActive('nav-profile');
+}
+function closeProfile() {
+  document.getElementById('profile-panel').classList.remove('open');
+}
+
+async function saveProfile() {
+  const pw = document.getElementById('new-password').value;
+  if (!pw) { showToast('변경할 비밀번호를 입력하세요'); return; }
+  const res = await api('POST', '/api/profile', { new_password: pw });
+  if (res.ok) {
+    document.getElementById('new-password').value = '';
+    document.getElementById('panel-msg').style.display = 'block';
+    setTimeout(() => document.getElementById('panel-msg').style.display = 'none', 2000);
+  } else {
+    showToast(res.error || '오류 발생');
+  }
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 180) + 'px';
+}
+
+// Login on Enter key
+document.getElementById('login-password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+document.getElementById('login-username').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('login-password').focus();
+});
+
+// ─── BOOT ─────────────────────────────────────────────────────────────────────
+checkSession();
+</script>
+</body>
+</html>
